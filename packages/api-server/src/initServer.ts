@@ -4,11 +4,17 @@ import clearPortalInterval from './utils/clearPortalInterval'
 import getDb, { db, redis } from './utils/db'
 import migrations from './utils/migrations'
 import populateServers from './utils/populateServers'
+import { createDb } from 'postgres-migrations'
+import config from './utils/config'
 
 const initServer = async () => {
   await getDb()
   await migrations()
   await populateServers()
+  await createDb(config.db.database, {
+    ...config.db,
+    defaultDatabase: 'postgres', // defaults to "postgres"
+  })
 
   const zones = await redis.getZones()
 

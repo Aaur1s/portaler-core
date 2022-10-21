@@ -7,3 +7,4 @@ CREATE TABLE IF NOT EXISTS user_logs (
   details VARCHAR (1024),
   created_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+

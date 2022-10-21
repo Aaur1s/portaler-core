@@ -187,8 +187,10 @@ const PortalMap = () => {
         const isHome = home.name === z.name
 
         const backgroundColor = getZoneColor(z.color, isHome, z.isDeep)
-        const width = isHome || z.color === 'city' || z.color === 'city-black' ? 42 : 30
-        const height = isHome || z.color === 'city' || z.color === 'city-black' ? 42 : 30
+        const width =
+          isHome || z.color === 'city' || z.color === 'city-black' ? 42 : 30
+        const height =
+          isHome || z.color === 'city' || z.color === 'city-black' ? 42 : 30
 
         if (!elms.has(id)) {
           const imgUrl = z.tier ? tiers[z.tier as ZoneTier] : null

@@ -23,10 +23,9 @@ export const getZoneMeta = async (id: number): Promise<Zone> => {
   }
 
   try {
-    const zoneRes: Promise<QueryResult<IZoneModel>> = db.dbQuery(
-      `SELECT * FROM zones WHERE id = $1;`,
-      [id]
-    )
+    const zoneRes: Promise<
+      QueryResult<IZoneModel>
+    > = db.dbQuery(`SELECT * FROM zones WHERE id = $1;`, [id])
 
     const resources = db.dbQuery(
       `
@@ -90,30 +89,38 @@ export const getZoneMeta = async (id: number): Promise<Zone> => {
       isDeep: zoneRow.is_deep_road,
     }
 
-    const resourcesData: Resource[] = metaDataRes[1].rows.map((r) => ({
-      name: r.resource_type,
-      tier: r.resource_tier,
-      count: r.resource_count,
-    }))
+    const resourcesData: Resource[] = metaDataRes[1].rows.map(
+      (r: { resource_type: any; resource_tier: any; resource_count: any }) => ({
+        name: r.resource_type,
+        tier: r.resource_tier,
+        count: r.resource_count,
+      })
+    )
 
-    const mobsData: Mob[] = metaDataRes[2].rows.map((m) => ({
-      name: m.mob_name,
-      tier: m.mob_tier,
-      count: m.mob_count,
-    }))
+    const mobsData: Mob[] = metaDataRes[2].rows.map(
+      (m: { mob_name: any; mob_tier: any; mob_count: any }) => ({
+        name: m.mob_name,
+        tier: m.mob_tier,
+        count: m.mob_count,
+      })
+    )
 
-    const markersData: Marker[] = metaDataRes[3].rows.map((m) => ({
-      name: m.marker_type,
-      pos: [m.posx, m.posy],
-    }))
+    const markersData: Marker[] = metaDataRes[3].rows.map(
+      (m: { marker_type: any; posx: any; posy: any }) => ({
+        name: m.marker_type,
+        pos: [m.posx, m.posy],
+      })
+    )
 
-    const connData: ZoneLite[] = metaDataRes[4].rows.map((z) => ({
-      id: z.id,
-      name: z.name,
-      tier: z.tier,
-      type: z.type,
-      color: z.color,
-    }))
+    const connData: ZoneLite[] = metaDataRes[4].rows.map(
+      (z: { id: any; name: any; tier: any; type: any; color: any }) => ({
+        id: z.id,
+        name: z.name,
+        tier: z.tier,
+        type: z.type,
+        color: z.color,
+      })
+    )
 
     zone.info = {
       markers: markersData,

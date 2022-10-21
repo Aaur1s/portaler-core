@@ -1,5 +1,4 @@
 ALTER TABLE zones ADD is_deep_road BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE servers ALTER COLUMN subdomain TYPE VARCHAR(50);
 ALTER TABLE royal_connections ALTER COLUMN conn_type TYPE VARCHAR(50);
 ALTER TABLE user_logs ALTER COLUMN details TYPE JSONB USING details::jsonb;
 

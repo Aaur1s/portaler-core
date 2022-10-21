@@ -5,9 +5,11 @@ import { UserAction } from '@portaler/data-models/out/models/User'
 import { Portal, PortalPayload } from '@portaler/types'
 
 import {
+  addServerPortal,
   deleteServerPortal,
   getServerPortals,
   IPortalModel,
+  updateServerPortal,
 } from '../database/portals'
 import { db } from '../utils/db'
 import logger from '../utils/logger'
@@ -77,8 +79,6 @@ router.post('/', async (req, res) => {
 
     const conns = body.connection.sort()
 
-    // TODO move the queries in this function to the new package
-    // retain backwards compatibility until we can edit connections
     const dbRes = await db.dbQuery(
       `
       SELECT id
@@ -88,15 +88,15 @@ router.post('/', async (req, res) => {
     )
 
     if (dbRes.rowCount === 0) {
-      await db.dbQuery(
+      /*await db.dbQuery(
         `
       INSERT INTO portals (server_id, conn1, conn2, size, expires, created_by)
       VALUES ($1, $2, $3, $4, $5, $6);
     `,
         [req.serverId, conns[0], conns[1], body.size, expires, req.userId]
-      )
-
-      await db.User.logUserAction(
+      )*/
+      await addServerPortal(conns, body.size, expires, req.userId, req.serverId)
+      /*await db.User.logUserAction(
         req.userId,
         req.serverId,
         UserAction.add,
@@ -104,9 +104,9 @@ router.post('/', async (req, res) => {
           conns,
           expires,
         })
-      )
+      )*/
     } else {
-      await db.dbQuery(
+      /*await db.dbQuery(
         `
         UPDATE portals
         SET size = $1, expires = $2
@@ -121,9 +121,16 @@ router.post('/', async (req, res) => {
         FROM (SELECT * FROM portals WHERE id = $1) portal
         `,
         [dbRes.rows[0].id]
+      )*/
+      await updateServerPortal(
+        dbRes.rows[0].id,
+        conns,
+        body.size,
+        expires,
+        req.userId,
+        req.serverId
       )
-
-      await db.User.logUserAction(
+      /*await db.User.logUserAction(
         req.userId,
         req.serverId,
         UserAction.update,
@@ -131,7 +138,7 @@ router.post('/', async (req, res) => {
           from: dbRes.rows[0].json_field,
           to: portalUpdateDb.rows[0].json_field,
         })
-      )
+      )*/
     }
 
     res.sendStatus(204)

@@ -13,9 +13,7 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
       return next()
     }
 
-    const configSubdomain = isProd ? req.subdomains[0] : process.env.HOST
-
-    const serverConfigRes = await redis.getAsync(`server:${configSubdomain}`)
+    const serverConfigRes = await redis.getAsync(`server`)
     const serverConfig = serverConfigRes ? JSON.parse(serverConfigRes) : false
 
     if (serverConfig && serverConfig.isPublic) {

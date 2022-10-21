@@ -7,7 +7,6 @@ import fetchler from '../fetchler'
 
 const useAddPortal = () => {
   const checkPortals = useGetPortals()
-
   return useCallback(
     async (portal: PortalPayload) => {
       await fetchler.post('/api/portal', { ...portal })

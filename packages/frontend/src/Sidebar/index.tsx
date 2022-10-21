@@ -111,7 +111,7 @@ const SideBar = () => {
     paddingRight: sideBar ? 'inherit' : 0,
   })
 
-  return (!token) ? (
+  return !token ? (
     <LoginButton />
   ) : (
     <aside className={styles.searchSide}>

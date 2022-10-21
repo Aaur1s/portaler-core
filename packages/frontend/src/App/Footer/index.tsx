@@ -14,6 +14,9 @@ const Footer = () => (
         >
           <img src={patreonLogo} className={styles.patreonLogo} alt="patreon" />
         </a>
+        <strong className={styles.patreonText}>
+          You can get private portaler for your guild from here
+        </strong>
       </div>
     </div>
     <div className={styles.middle}></div>

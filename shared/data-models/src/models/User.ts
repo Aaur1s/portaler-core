@@ -121,8 +121,8 @@ export default class UserModel extends BaseModel {
       if (!userId) {
         const dbResUser = await this.query(
           `
-          INSERT INTO users(discord_id, discord_name, discord_discriminator, discord_refresh)
-          VALUES ($1, $2, $3, $4) RETURNING id;
+          INSERT INTO users(discord_id, discord_name, discord_discriminator, discord_refresh, portals_created)
+          VALUES ($1, $2, $3, $4, 0) RETURNING id;
           `,
           [userInfo.id, userInfo.username, userInfo.discriminator, refreshToken]
         )

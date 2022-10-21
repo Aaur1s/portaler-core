@@ -45,13 +45,14 @@ const fileGetter = async () => {
 
   await redis.setZones(zoneList)
 }
-
 ;(async () => {
   await getDb()
 
   await fileGetter()
 
   setInterval(fileGetter, timer)
-  redis.client.flushall()
+
+  await redis.client.flushall()
+
   logger.info('ETL started')
 })()

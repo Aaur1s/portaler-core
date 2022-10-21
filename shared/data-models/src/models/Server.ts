@@ -11,7 +11,6 @@ export interface IServerModel {
   discordId: string
   discordName: string
   roles: ServerRoles[]
-  subdomain?: string | null
   createdOn: Date
   isPublic: boolean
   discordUrl?: string | null
@@ -59,7 +58,6 @@ export default class ServerModel extends BaseModel {
         s.id AS id,
         s.discord_id AS discord_id,
         s.discord_name AS discord_name,
-        s.subdomain AS subdomain,
         s.created_on AS created_on,
         s.is_public AS is_public,
         s.discord_url AS discord_url,
@@ -83,7 +81,6 @@ export default class ServerModel extends BaseModel {
         id: fRow.id,
         discordId: fRow.discord_id,
         discordName: fRow.discord_name,
-        subdomain: fRow.subdomain,
         createdOn: fRow.created_on,
         isPublic: true,
         discordUrl: fRow.discord_url,
@@ -100,18 +97,19 @@ export default class ServerModel extends BaseModel {
     }
   }
 
-  getServerIdBySubdomain = async (
-    subDomain: string
+  getServerIdByDiscordId = async (
+    discordServerId: string
   ): Promise<number | null> => {
     const dbResServer = await this.query(
-      `SELECT id FROM servers WHERE subdomain = $1`,
-      [subDomain.toLowerCase()]
+      `SELECT id
+           FROM servers
+           WHERE discord_id = $1`,
+      [discordServerId]
     )
 
     if (dbResServer.rowCount === 0) {
       return null
     }
-
     return dbResServer.rows[0].id
   }
 }

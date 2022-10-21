@@ -21,11 +21,11 @@ export const getServerPortals = async (
     .rows
 
 export const addServerPortal = async (
-  serverId: number,
   conns: [string, string],
   size: PortalSize,
   expires: Date,
-  userId: number
+  userId: number,
+  serverId: number
 ) => {
   try {
     await db.dbQuery(
@@ -35,7 +35,13 @@ export const addServerPortal = async (
   `,
       [serverId, conns[0], conns[1], size, expires, userId]
     )
-
+    await db.dbQuery(
+      `
+        UPDATE users
+        SET portals_created = portals_created + 1
+        WHERE id = $1`,
+      [userId]
+    )
     await db.User.logUserAction(
       userId,
       serverId,
@@ -70,7 +76,13 @@ export const deleteServerPortal = async (
       `DELETE FROM portals WHERE id = ANY($1::int[]) AND server_id = $2`,
       [portalIds, serverId]
     )
-
+    await db.dbQuery(
+      `
+        UPDATE users
+        SET portals_created = portals_created - 1
+        WHERE id = $1`,
+      [userId]
+    )
     await db.User.logUserAction(
       userId,
       serverId,
@@ -107,7 +119,7 @@ export const updateServerPortal = async (
         conn2 = $2,
         size = $3,
         expires = $4
-      WHERE id = $5 AND serverId = $6 RETURNING `,
+      WHERE id = $5 AND server_id = $6 RETURNING `,
       [conns[0], conns[1], size, expires, portalId, serverId]
     )
 

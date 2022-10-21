@@ -1,7 +1,8 @@
 import { randomInt } from './randomInt'
 
-const chars =
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('')
+const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split(
+  ''
+)
 /**
  * Generates a random alphanumeric key
  * @param  size? If no size is defined, it randomly generates a key from 5 to 10 characters

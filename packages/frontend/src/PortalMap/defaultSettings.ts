@@ -4,6 +4,7 @@ const defaultSettings: CytoscapeOptions = {
   pan: { x: 0, y: 0 },
   minZoom: 0.05,
   maxZoom: 1.75,
+  wheelSensitivity: 0.25,
   zoomingEnabled: true,
   userZoomingEnabled: true,
   panningEnabled: true,
