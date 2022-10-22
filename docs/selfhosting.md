@@ -1,15 +1,5 @@
 # Selfhosting Portaler
 
-**Disclaimer:** This guide was written by a hardware/operations engineer with limited Linux experience and not by the developer of Portaler.
-Most likely there are better ways to self-host Portaler but this is what i use. I am not responsible for any damage you do to your system while following this guide.
-
-I tried my best to make this guide as newbie-friendly as possible so it should work even for people with basically no Linux experience.
-In case you'll encounter an error during installation you can usually google it and find a fix without any problems. Asking on the discord server works too.
-
-**There is also a [WIP containerized version](https://github.com/Logoffski/portaler-core/tree/docker_test/docker) that is much easier to deploy, but it is somewhat finicky and doesn't leave much room for error. If you have a good understanding on how selfhosting works you can try it instead.**
-
-(goes to Logoffski, not me ^)
-
 ## Requirements
 
 **If you want to use Portaler locally on your PC**: Any kind of Linux VM on your network where you have root privileges and can access the terminal. The simplest solution is using something like VirtualBox (google how to do that, it is easy)
@@ -71,9 +61,8 @@ cd /usr/local/etc/docker-portaler
 Clone the whole portaler repository:
 
 ```Shell
-git clone https://github.com/aut1sto/portaler-core
+git clone -b beta https://github.com/aut1sto/portaler-core
 ```
-
 Install all yarn dependencies:
 
 ```Shell
@@ -145,7 +134,7 @@ services:
     networks:
       - portaler
   api_server:
-    image: aut1sto/portaler:stable
+    image: aut1sto/portaler:beta
     env_file:
       - .env.example
     restart: unless-stopped
@@ -157,7 +146,7 @@ services:
     networks:
       - portaler
   bin_etl:
-    image: aut1sto/portaler-etl:stable
+    image: aut1sto/portaler-etl:beta
     env_file:
       - .env.example
     restart: unless-stopped
@@ -196,6 +185,8 @@ In this list look for **container id** of the container with bin_etl (most likel
 
 ```Shell
 docker restart your_bin_etl_containerid
+docker exec your_rediscache_containerid redis-cli -a redis flushall
+docker restart your_api_server_containerid
 ```
 
 Switch to the folder containing frontend files:
@@ -221,16 +212,16 @@ pm2 save
 
 Wait some time for the webserver to start. Now you can open your browser and go to http://yourserverip:3000 to use Portaler.
 
-### Windows Troubleshoting
+### Windows Troubleshooting
 
 for the local version on windows double check that
 
 1. you have both python 2 and python 3. and that they are in the path.
-  1.1 python2 should open python 2.7 and python should open python 3.whatever
+   1.1 python2 should open python 2.7 and python should open python 3.whatever
 2. make sure you are running all yarn and npm commands in node v 14.20.1 (latest version of node 14)
-    on windows that means that you can use the nvm utility to make sure you are utilizing the correct version
+   on windows that means that you can use the nvm utility to make sure you are utilizing the correct version
 3. utilize admin powershell for you're first instalation / setup
-4. if after `docker-compose up -d` you do not have a instance of bin-etl running then make sure you were in the /docker/ directory of the project 
+4. if after `docker-compose up -d` you do not have a instance of bin-etl running then make sure you were in the /docker/ directory of the project
 
 
 
@@ -240,19 +231,10 @@ for the local version on windows double check that
 
 ### Explanation about domain names structure
 
-Due to how Portaler is made you can't just use "yourdomain.com" for your domain name. You need to have a subdomain.
-That means portaler needs to be accessible with yoursubdomain.yourdomain.com instead.
-To create a subdomain, go to the DNS server provider you use (i use cloudflare for example) and add a CNAME record with your subdomain pointing to your domain.
+To host Portaler publicly you ofc need domain. You can host portaler without subdomain, link will be like **https://portaler.org/** or, you can host it with subdomain if you want, link will be like **https://public.portaler.org/**
 
-You can either do it like this:
-
-<img src="https://i.imgur.com/v5MKyO1.png" width="350px" alt="screenshot" />
-
-Or you can do it like this:
-
-<img src="https://i.imgur.com/9awWAkf.png" width="350px" alt="screenshot" />
-
-In the steps to follow I'll be using "yoursubdomain" and "yourdomain" as substitutes for the domain and subdomain names you own. The following part of the guide assumes you know already how hosting a website and stuff like DNS work and realize what domain/subdomain names are.
+In the steps to follow I'll be using "YOURHOSTDOMAIN" as substitutes for the domain and subdomain names you own. The following part of the guide assumes you know already how hosting a website and stuff like DNS work and realize what domain/subdomain names are.
+For example, YOURHOSTDOMAIN for https://public.portaler.org/ is public.portaler.org.
 
 Now that we have this settled lets build our frontend:
 
@@ -280,7 +262,9 @@ Paste this config into the file:
 ```nginx
 server {
   listen 80;
-
+  
+  server_name YOURHOSTDOMAIN;
+  
   location /api/ {
     proxy_set_header X-Forwarded-For $remote_addr;
     proxy_set_header Host           $http_host;
@@ -312,106 +296,9 @@ systemctl restart nginx
 
 You should be able to access the website now in your browser (nothing will work however without the backend)
 
-### Everything discord bot related
-
-You will need to create an application using [discord developer portal](https://discord.com/developers/applications). You can name it however you want.
-
-Go to the "Bot" page and press Add Bot, check **Presence Intent** and **ServerMember Intent**.
-On the OAuth2 page press "Add Redirect" and put there http://yoursubdomain.yourdomain:80/api/auth/callback. Don't forget to save changes.
-
-You will need **ClientID**, **ClientSecret**, **PublicKey** from the "General Information" page and **Token** from the "Bot" page for the next step.
-
-Now that you have those values you can set-up your docker containers:
-
-```Shell
-cd /usr/local/etc/docker-portaler/portaler-core/docker
-nano .env.example
-```
-
-You need to edit those values:
-
-**HOST=** to your domain name (ex. myserver.com and NOT yoursubdomain.myserver.com)
-
-**ADMIN_KEY=** to a random string.
-
-**ACCESS_TOKEN=** to your github access token you've created in the beginning.
-
-**DISCORD_REDIRECT_URI=** http://yoursubdomain.yourdomain:80/api/auth/callback (same stuff you've put into the Discord OAuth page)
-
-**DISCORD_BOT_TOKEN=** Token from "Bot" page.
-
-**DISCORD_PUBLIC_TOKEN**= PublicKey from "General Information" page.
-
-**DISCORD_CLIENT_TOKEN**= ClientID from "General Information" page.
-
-**DISCORD_SECRET_TOKEN**= ClientSecret from "General Information" page.
-
-Leave everything else as is.
-
-`ctrl-x` to exit, don't forget to save your changes.
-
-**Important: do NOT invite your bot to your server before you are done setting up docker containers. The bot has to join you discord server with api already running. If your bot is already on your server - kick it.**
-
-When you are done editing the files - start the containers
-
-```Shell
-docker-compose up -d
-```
-
-If you realized that you've done something wrong you can simply edit `.env.example` or `docker-compose.yml` and `docker-compose up -d` again.
-
-After the process is done wait for a couple of minutes and check that all containers are up and running:
-
-```Shell
-docker ps -a
-```
-
-In this list look for **container id** of the container with bin_etl (most likely will be the first one in the list) and restart it. That should populate the DB with zone info.
-
-```Shell
-docker restart your_bin_etl_containerid
-```
-
-Now you can invite your bot to your server:
-
-Go to [Discord Permissions](https://discordapi.com/permissions.html#0)
-
-Tick "manage roles" and insert your bots **ClientID** (the one you used while editing the `.env.example` file). Click on the generated link below and add the bot to your server (don't forget that you need to have permissions to do that).
-
-The bot should've created a new role called **portaler** or whatever you've set in your `.env.example.` Grant this role to yourself.
-
-Open your web-browser and go to http://yoursubdomain.yourdomain:80
-Try logging in using discord OAuth - you will most likely get an error while you try that. In order to fix that error you need to add your subdomain to the subdomain list. To do that you first need to get the id of your server:
-
-```Shell
-curl -H "Authorization: Bearer youradminkey" http://localhost/api/admin/list
-```
-
-"youradminkey" is the **ADMIN_KEY** you've set up in your `.env.example`.
-
-Look for `"id":number`. Most likely your id wil be 1.
-
-Now you can add your server to the list:
-
-```Shell
-curl -H "Authorization: Bearer youradminkey" -H "Content-Type: application/json" --request POST --data '{"id": yourid, "subdomain": "yoursubdomain" }' http://localhost/api/admin/addSubdomain
-```
-
-Do `curl -H "Authorization: Bearer youradminkey" http://localhost/api/admin/list` again and look for `"subdomain"` - it should be `"subdomain":"yoursubdomain"` now.
-
-Try logging in again. This time everything should be working fine.
-
-After first login you will see no locations at zone select, you need to clear rediscache for zones to appear:
-
-```Shell
-docker exec your_rediscache_containerid redis-cli -a redis flushall
-docker restart your_api_server_containerid
-docker restart your_bin_etl_containerid
-```
-
 ### How to set up SSL
 
-After your portaler instance done you can setup SSL(https://) for your portaler. It's not necessarily but recommended.
+After your portaler instance done you can setup SSL(https://) for your portaler.
 
 Setup certbot to gen SSL certificates:
 
@@ -442,18 +329,18 @@ nano /etc/nginx/conf.d/portaler.conf
 ```
 (or vim, up to you)
 
-Paste this config(change YOURSUBDOMAIN and YOURDOMAIN with data from your instance):
+Paste this config(change YOURHOSTDOMAIN with data from your instance):
 
 ```nginx
 server {
   listen 443 ssl;
   listen [::]:443 ssl;
 
-  server_name YOURSUBDOMAIN.YOURDOMAIN;
+  server_name YOURHOSTDOMAIN;
 
-  ssl_certificate         /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/fullchain.pem;
-  ssl_certificate_key     /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/privkey.pem;
-  ssl_trusted_certificate /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/chain.pem;
+  ssl_certificate         /etc/letsencrypt/live/YOURHOSTDOMAIN/fullchain.pem;
+  ssl_certificate_key     /etc/letsencrypt/live/YOURHOSTDOMAIN/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/YOURHOSTDOMAIN/chain.pem;
 
   ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem;
 
@@ -479,24 +366,92 @@ server {
 }
 server {
   listen 80;
-  server_name YOURSUBDOMAIN.YOURDOMAIN;
-  return 301 https://YOURSUBDOMAIN.YOURDOMAIN$request_uri;
+  server_name YOURHOSTDOMAIN;
+  return 301 https://YOURHOSTDOMAIN$request_uri;
 }
 ```
-Also, you need to change discord redirect link in .env.example and in discord bot settings from **http://yoursubdomain.yourdomain:80/api/auth/callback** to **https://yoursubdomain.yourdomain:443/api/auth/callback**. To apply changes from .env.example run:
-```Shell
-docker-compose up -d
-```
-
-Finally, we can restart nginx:
+Now, we can restart nginx to apply changes:
 
 ```Shell
 systemctl restart nginx
 ```
 
 
-Common Troubleshooting steps for windows local.
-And your https should work!
+
+### Everything discord bot related
+
+You will need to create an application using [discord developer portal](https://discord.com/developers/applications). You can name it however you want.
+
+Go to the "Bot" page and press Add Bot, check **Presence Intent** and **ServerMember Intent**.
+On the OAuth2 page press "Add Redirect" and put there https://YOURHOSTDOMAIN:443/api/auth/callback. Don't forget to save changes.
+
+You will need **ClientID**, **ClientSecret**, **PublicKey** from the "General Information" page and **Token** from the "Bot" page for the next step.
+
+Now that you have those values you can set-up your docker containers:
+
+```Shell
+cd /usr/local/etc/docker-portaler/portaler-core/docker
+nano .env.example
+```
+
+You need to edit those values:
+
+**HOST=** to YOURHOSTDOMAIN (ex. myserver.com or yoursubdomain.myserver.com)
+
+**ADMIN_KEY=** to a admin key, only for devs but don't leave it 1234.
+
+**ACCESS_TOKEN=** to your github access token you've created in the beginning.
+
+**DISCORD_REDIRECT_URI=** https://YOURHOSTDOMAIN:443/api/auth/callback (same stuff you've put into the Discord OAuth page)
+
+**DISCORD_BOT_TOKEN=** Token from "Bot" page.
+
+**DISCORD_PUBLIC_TOKEN**= PublicKey from "General Information" page.
+
+**DISCORD_CLIENT_TOKEN**= ClientID from "General Information" page.
+
+**DISCORD_SECRET_TOKEN**= ClientSecret from "General Information" page.
+
+**DISCORD_ROLE**= Name of role that will be created when bot join your server. If you want to attach bot to existing role type name of role that you want to attach here.
+
+**DISCORD_SERVER_ID**= ID of your discord server, only for this server ID auth will work.
+
+Leave everything else as is.
+
+`ctrl-x` to exit, don't forget to save your changes.
+
+## **Important: do NOT invite your bot to your server before you are done setting up docker containers. The bot has to join you discord server with api already running. If your bot is already on your server - kick it.**
+
+When you are done editing the files - start the containers
+
+```Shell
+docker-compose up -d
+```
+
+If you realized that you've done something wrong you can simply edit `.env.example` or `docker-compose.yml` and `docker-compose up -d` again.
+
+After the process is done wait for a couple of minutes and check that all containers are up and running:
+
+```Shell
+docker ps -a
+```
+
+In this list look for **container id** of the container with bin_etl (most likely will be the first one in the list) and restart it. That should populate the DB with zone info.
+
+```Shell
+docker restart your_bin_etl_containerid
+docker exec your_rediscache_containerid redis-cli -a redis flushall
+docker restart your_api_server_containerid
+```
+
+Now you can invite your bot to your server:
+
+1) You can open link https://YOURHOSTDOMAIN/api/bot in browser, and it will redirect you to bot invite page.
+2) Or you can just generate link yourself, its up to you ofc.
+
+The bot should've created a new role called **portaler** or whatever you've set in your `.env.example.` Grant this role to yourself.
+
+Open your browser and go to https://YOURHOSTDOMAIN/ and login, portaler should work properly now, thx for using this guide!
 
 If you have any questions or something isn't working feel free to ask these questions in Portaler Dev discord server:
 https://discord.com/invite/3GwNSgvR5g
