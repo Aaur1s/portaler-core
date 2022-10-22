@@ -61,7 +61,7 @@ cd /usr/local/etc/docker-portaler
 Clone the whole portaler repository:
 
 ```Shell
-git clone -b beta https://github.com/aut1sto/portaler-core
+git clone https://github.com/aut1sto/portaler-core
 ```
 Install all yarn dependencies:
 
