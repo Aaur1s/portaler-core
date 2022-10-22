@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
-import { redis } from '../utils/db'
+import { db, redis } from '../utils/db'
 import logger from '../utils/logger'
-
-const isProd = process.env.NODE_ENV === 'production'
 
 const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -50,25 +48,28 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
         req.userId = 0
         return next()
       }
-
       return res.sendStatus(403)
     }
 
-    const [userId, serverId] = userServer.split(':')
+    const [userId, serverId0] = userServer.split(':')
 
-    const subdomain = await redis.getAsync(`server:${serverId}`)
+    const discordServerId = process.env.DISCORD_SERVER_ID as string
 
-    if (isProd && subdomain !== req.subdomains[0]) {
+    const serverId1 = ((await db.Server.getServerIdByDiscordId(
+      discordServerId
+    )) as unknown) as string
+
+    // eslint-disable-next-line eqeqeq
+    if (serverId1 != serverId0) {
       if (serverConfig.isPublic) {
         req.userId = 0
         return next()
       }
-
       return res.sendStatus(403)
     }
 
     req.userId = Number(userId)
-    req.serverId = Number(serverId)
+    req.serverId = Number(serverId0)
 
     next()
   } catch (err) {

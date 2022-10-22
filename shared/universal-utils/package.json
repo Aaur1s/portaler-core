@@ -1,6 +1,6 @@
 {
   "name": "@portaler/utils",
-  "version": "0.1.110",
+  "version": "0.1.111",
   "description": "Frontend/Backend shared utils Portaler",
   "main": "out/index.js",
   "types": "out/index.d.ts",

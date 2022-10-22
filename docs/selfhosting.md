@@ -221,6 +221,21 @@ pm2 save
 
 Wait some time for the webserver to start. Now you can open your browser and go to http://yourserverip:3000 to use Portaler.
 
+### Windows Troubleshoting
+
+for the local version on windows double check that
+
+1. you have both python 2 and python 3. and that they are in the path.
+  1.1 python2 should open python 2.7 and python should open python 3.whatever
+2. make sure you are running all yarn and npm commands in node v 14.20.1 (latest version of node 14)
+    on windows that means that you can use the nvm utility to make sure you are utilizing the correct version
+3. utilize admin powershell for you're first instalation / setup
+4. if after `docker-compose up -d` you do not have a instance of bin-etl running then make sure you were in the /docker/ directory of the project 
+
+
+
+
+
 ## Option 2 - Steps for public version
 
 ### Explanation about domain names structure
@@ -434,11 +449,11 @@ server {
   listen 443 ssl;
   listen [::]:443 ssl;
 
-  server_name YOURSUBDOMAIN.portaler.org;
+  server_name YOURSUBDOMAIN.YOURDOMAIN;
 
   ssl_certificate         /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/fullchain.pem;
-  ssl_certificate_key     /etc/letsencrypt/live/YOURSUBDOMAIN.YOURSUBDOMAIN/privkey.pem;
-  ssl_trusted_certificate /etc/letsencrypt/live/YOURSUBDOMAIN.YOURSUBDOMAIN/chain.pem;
+  ssl_certificate_key     /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/YOURSUBDOMAIN.YOURDOMAIN/chain.pem;
 
   ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem;
 
@@ -464,11 +479,14 @@ server {
 }
 server {
   listen 80;
-  server_name YOURSUBDOMAIN.YOURSUBDOMAIN;
-  return 301 https://YOURSUBDOMAIN.YOURSUBDOMAIN$request_uri;
+  server_name YOURSUBDOMAIN.YOURDOMAIN;
+  return 301 https://YOURSUBDOMAIN.YOURDOMAIN$request_uri;
 }
 ```
-Also, you need to change discord redirect link in .env.example and in discord bot settings from **http://yoursubdomain.yourdomain:80/api/auth/callback** to **https://yoursubdomain.yourdomain:443/api/auth/callback**.
+Also, you need to change discord redirect link in .env.example and in discord bot settings from **http://yoursubdomain.yourdomain:80/api/auth/callback** to **https://yoursubdomain.yourdomain:443/api/auth/callback**. To apply changes from .env.example run:
+```Shell
+docker-compose up -d
+```
 
 Finally, we can restart nginx:
 
@@ -476,6 +494,8 @@ Finally, we can restart nginx:
 systemctl restart nginx
 ```
 
+
+Common Troubleshooting steps for windows local.
 And your https should work!
 
 If you have any questions or something isn't working feel free to ask these questions in Portaler Dev discord server:

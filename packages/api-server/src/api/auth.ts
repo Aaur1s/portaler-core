@@ -51,7 +51,7 @@ router.get('/callback', async (req, res) => {
     const serverId = await db.Server.getServerIdByDiscordId(discordServerId)
 
     if (!serverId) {
-      throw new Error('NoSubdomainServerFound' + serverId)
+      throw new Error('NoServerFound' + serverId)
     }
 
     const user = await db.User.getFullUser(userId, serverId)
