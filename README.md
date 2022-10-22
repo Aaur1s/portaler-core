@@ -8,7 +8,7 @@ also main branch equals beta branch rn, i fucked up a little bit ._.
 # Portaler is alive!
 
 <p align="center">
-  <img alt="Portaler logo" width="512px" height="512px" src="https://github.com/aut1sto/portaler-core/blob/main/assets/logo/logo-512x512.png" />
+  <img alt="Portaler logo" width="512px" height="512px" src="https://github.com/aut1sto/portaler-core/blob/dev/assets/logo/logo-512x512.png" />
 </p>
 
 This repo is Modern Portaler repo of developer from Portaler Community.
@@ -32,8 +32,8 @@ Portaler is a mapping tool for Avalonian Roads in Albion Online, that provides r
 The data we use to populate information is collected from [Albion Data Project](https://www.albion-online-data.com/).
 
 <p align="center">
-<a href="https://github.com/aut1sto/portaler-core/blob/main/assets/screenshot.png" target="_blank" rel="noopener nofollow noreferrer">
-  <img src="https://github.com/aut1sto/portaler-core/blob/main/assets/screenshot.png" alt="Screenshot" />
+<a href="https://github.com/aut1sto/portaler-core/blob/dev/assets/screenshot.png" target="_blank" rel="noopener nofollow noreferrer">
+  <img src="https://github.com/aut1sto/portaler-core/blob/dev/assets/screenshot.png" alt="Screenshot" />
 </a>
 </p>
 
