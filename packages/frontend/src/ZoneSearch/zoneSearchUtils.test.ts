@@ -1,4 +1,5 @@
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete'
+//@ts-ignore
 import { filterZones, getMaxString, ZoneLight } from './zoneSearchUtils'
 
 describe('Test zoneSearchUtils', () => {
@@ -51,7 +52,7 @@ describe('Test zoneSearchUtils', () => {
       const singleList = [
         { name: 'HomeTerritory Skirmish', value: 'hometerritory skirmish' },
       ]
-
+      //@ts-ignore
       expect(filterZones(singleList, getState('ho'))).toMatchObject(singleList)
     })
 
@@ -96,7 +97,7 @@ describe('Test zoneSearchUtils', () => {
       const singleList = [
         { name: 'HomeTerritory Skirmish', value: 'hometerritory skirmish' },
       ]
-
+      //@ts-ignore
       expect(getMaxString(singleList, 'ho')).toBe('HomeTerritory Skirmish')
     })
 

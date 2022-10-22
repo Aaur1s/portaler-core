@@ -143,8 +143,8 @@ const worldProcess = async (worldFile: FullZone[]): Promise<string[]> => {
       !z.type.includes('PLAYERCITY_SAFEAREA_NOFURNITURE') &&
       !z.type.includes('PLAYERCITY_BLACK_ROYAL_NOFURNITURE') &&
       !z.type.includes('_HALL_OF_FAME') &&
-      !z.displayname.includes('Market') &&
-      !z.displayname.includes('Bank') &&
+      !(z.displayname.includes('Market') && z.type.startsWith('PLAYERCITY')) &&
+      !(z.displayname.includes('Bank') && z.type.startsWith('PLAYERCITY')) &&
       !z.id.includes('RoadPve') &&
       !z.id.includes('ChampionsRealmLive') &&
       z.type !== 'PASSAGE_SAFEAREA'

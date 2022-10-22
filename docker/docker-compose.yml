@@ -22,7 +22,7 @@ services:
     networks:
       - portaler
   discord_bot:
-    image: mawburn/portaler-bot:latest
+    image: aut1sto/portaler-bot:beta
     env_file:
       - .env.example
     restart: unless-stopped
@@ -34,7 +34,7 @@ services:
     networks:
       - portaler
   api_server:
-    image: aut1sto/portaler:stable
+    image: aut1sto/portaler:beta
     env_file:
       - .env.example
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
     networks:
       - portaler
   bin_etl:
-    image: aut1sto/portaler-etl:stable
+    image: aut1sto/portaler-etl:beta
     env_file:
       - .env.example
     restart: unless-stopped

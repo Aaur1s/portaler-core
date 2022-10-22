@@ -18,7 +18,7 @@ const removeServer = async (server: Guild) => {
     )
 
     const dbRolesRes = await db.dbQuery(
-      'DELETE FROM server_roles WHERE server_id = $1 RETURNING user_id',
+      'DELETE FROM server_roles WHERE server_id = $1 RETURNING discord_role_id',
       [serverId]
     )
 

@@ -30,15 +30,13 @@ const setupServer = async (server: Guild) => {
 
     const discordRoles = await server.roles.cache
 
-    const hasRole = discordRoles.find(
-      (r) => r.name === dbServer?.roles[0].discordRoleId
-    )
+    const hasRole = discordRoles.find((r) => r.name === rolePayload.name)
 
     const role =
       hasRole ||
       (await server.roles.create({
         data: rolePayload,
-        reason: 'Add authentication for Portaler.zone',
+        reason: 'Add authentication for Portaler',
       }))
 
     const sid = serverId ?? (await db.Server.create(server.id, server.name))
@@ -72,13 +70,14 @@ const setupServer = async (server: Guild) => {
         db.User.createUser(m, sid, [serverRoleId])
       )
 
-      const subdomain = dbServer && dbServer.subdomain ? dbServer.subdomain : ''
+      const discord_id =
+        dbServer && dbServer.discordId ? dbServer.discordId : ''
 
-      const addToRedis = redis.setAsync(`server:${sid}`, subdomain)
+      const addToRedis = redis.setAsync(`server:${sid}`, discord_id)
 
-      if (subdomain) {
+      if (discord_id) {
         await redis.setAsync(
-          `server:${subdomain}`,
+          `server:${discord_id}`,
           JSON.stringify({
             isPublic: dbServer?.isPublic,
             serverId: dbServer?.id,

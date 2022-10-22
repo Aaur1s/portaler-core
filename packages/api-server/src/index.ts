@@ -7,12 +7,10 @@ import cors from 'cors'
 import express from 'express'
 
 import Api from './api'
-import Admin from './api/admin'
 import Auth from './api/auth'
 import ConfigRouter from './api/config'
 import Zone from './api/zone'
 import initServer from './initServer'
-import checkAdmin from './middleware/checkAdmin'
 import syntaxError from './middleware/syntaxError'
 import validator from './middleware/validator'
 import verifyUser from './middleware/verifyUser'
@@ -44,7 +42,6 @@ const app = express()
   app.use('/api/zone', Zone)
 
   // Authed routes
-  app.use('/api/admin', checkAdmin, Admin)
   app.use('/api', verifyUser, Api)
 
   app.listen(config.port, () => logger.info(`Started: ${config.port}`))

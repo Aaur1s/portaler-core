@@ -29,8 +29,7 @@ router.get('/callback', async (req, res) => {
     if (!req.cookies.subdomain && isProd) {
       throw new Error('NoRedirect')
     }
-
-    const subdomain = isProd ? req.cookies.subdomain : process.env.HOST
+    const discordServerId = process.env.DISCORD_SERVER_ID as string
 
     const protocol = req.secure ? 'https://' : 'http://'
     const code = req.query.code as string
@@ -49,19 +48,15 @@ router.get('/callback', async (req, res) => {
       discordJson.refresh_token
     )
 
-    const serverId = await db.Server.getServerIdBySubdomain(
-      isProd ? subdomain : 'localhost'
-    )
+    const serverId = await db.Server.getServerIdByDiscordId(discordServerId)
 
     if (!serverId) {
-      throw new Error('NoSubdomainServerFound')
+      throw new Error('NoServerFound' + serverId)
     }
 
     const user = await db.User.getFullUser(userId, serverId)
 
-    const redirectUrl = isProd
-      ? `${protocol}${subdomain}.${config.localUrl}`
-      : `${protocol}${process.env.HOST}:${process.env.FRONTEND_PORT}`
+    const redirectUrl = `${protocol}${config.localUrl}`
 
     if (!user) {
       return res.status(401).redirect(`${redirectUrl}/?token=invalid`)

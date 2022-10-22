@@ -20,7 +20,7 @@ import styles from './styles.module.scss'
 import yellow from './yellow.png'
 
 const Help = () => (
-  <div>
+  <div className={styles.container}>
     <h2>Help & Map Keys</h2>
     <h3>Map Icons</h3>
     <div className={styles.row}>
@@ -96,6 +96,10 @@ const Help = () => (
       <div className={styles.col}>Constant Connection</div>
     </div>
     <div className={styles.row}>
+      <WarningOutlinedIcon
+        color="secondary"
+        style={{ marginRight: '0.5rem' }}
+      />
       <em>
         Constant connections never deletes from map, used to connect cities with
         surround locs

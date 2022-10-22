@@ -4,7 +4,7 @@ import Layout from '../components/Layout'
 import MainLogo from '../components/MainLogo'
 import OtherStuff from '../components/OtherStuff'
 import SEO from '../components/seo'
-// @ts-expect-error
+// @ts-ignore
 import jakeWebp from '../images/jake.webp'
 
 import styles from './styles.module.scss'
