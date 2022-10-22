@@ -11,8 +11,6 @@ import fetchUser from '../utils/discord/fetchUser'
 import fetchUserGuilds from '../utils/discord/fetchUserGuilds'
 import logger from '../utils/logger'
 
-const isProd = process.env.NODE_ENV === 'production'
-
 const router = Router()
 
 router.get('/login', (_, res) => {
@@ -26,9 +24,6 @@ router.get('/callback', async (req, res) => {
       throw new Error('NoCodeProvided')
     }
 
-    if (!req.cookies.subdomain && isProd) {
-      throw new Error('NoRedirect')
-    }
     const discordServerId = process.env.DISCORD_SERVER_ID as string
 
     const protocol = req.secure ? 'https://' : 'http://'
