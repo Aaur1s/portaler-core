@@ -1,3 +1,9 @@
+# BETA BRANCH
+----
+# RIGHT NOW AUTH IS ON BETA TESTS
+----
+also main branch equals beta branch rn, i fucked up a little bit ._.
+----
 
 # Portaler is alive!
 
