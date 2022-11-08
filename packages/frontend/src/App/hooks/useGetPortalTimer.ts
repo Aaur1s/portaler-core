@@ -15,7 +15,7 @@ const useGetPortalTimer = () => {
   const config = useConfigSelector()
 
   useEffect(() => {
-    if ((config.token || config.isPublic) && initialLoad.current) {
+    if (config.token && initialLoad.current) {
       fetchPortals(config)
         .then((portals) => {
           dispatch({ type: PortalMapActionTypes.UPDATEMAP, portals })

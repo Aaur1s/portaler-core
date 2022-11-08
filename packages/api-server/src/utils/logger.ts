@@ -9,7 +9,7 @@ logger.on('data', (info: WinstonLog) => {
     setImmediate(() => {
       db.Logs.winstonLog(info)
     })
-  } catch (err) {
+  } catch (err: any) {
     console.error(err)
   }
 })

@@ -8,7 +8,6 @@ import express from 'express'
 
 import Api from './api'
 import Auth from './api/auth'
-import ConfigRouter from './api/config'
 import Zone from './api/zone'
 import initServer from './initServer'
 import syntaxError from './middleware/syntaxError'
@@ -16,17 +15,12 @@ import validator from './middleware/validator'
 import verifyUser from './middleware/verifyUser'
 import config from './utils/config'
 import logger from './utils/logger'
-import Admin from './api/admin'
-import checkAdmin from './middleware/checkAdmin'
 
 const app = express()
 
 // initialize the server
 ;(async () => {
   await initServer()
-
-  // app.enable('etag')
-
   app.use(cors(config.cors))
 
   app.use(bodyParser.json())
@@ -40,12 +34,10 @@ const app = express()
   app.use('/api/auth', Auth)
   app.get('/api/health', (_, res) => res.status(200).send({ server: 'ok' }))
   app.get('/api/bot', (_, res) => res.redirect(config.discord.botUrl))
-  app.use('/api/config', ConfigRouter)
   app.use('/api/zone', Zone)
 
   // Authed routes
   app.use('/api', verifyUser, Api)
-  app.use('/api/admin', checkAdmin, Admin)
 
   app.listen(config.port, () => logger.info(`Started: ${config.port}`))
 })()

@@ -7,16 +7,13 @@ CREATE TABLE IF NOT EXISTS users (
   discord_discriminator VARCHAR ( 7 ) NOT NULL,
   discord_refresh VARCHAR ( 100 ),
   portals_created INT NOT NULL,
+  custom_name VARCHAR ( 50 ),
   created_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
-
-INSERT INTO users (discord_id, discord_name, discord_discriminator, discord_refresh, portals_created)
-VALUES ('0', 'Portaler Server', '4242', 'none', 0);
 
 CREATE TABLE IF NOT EXISTS servers (
   id serial PRIMARY KEY,
   discord_id VARCHAR ( 50 ) UNIQUE NOT NULL,
-  discord_name VARCHAR ( 50 ) NOT NULL,
   created_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 

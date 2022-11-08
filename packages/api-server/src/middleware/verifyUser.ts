@@ -11,31 +11,13 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
       return next()
     }
 
-    const serverConfigRes = await redis.getAsync(`server`)
-    const serverConfig = serverConfigRes ? JSON.parse(serverConfigRes) : false
-
-    if (serverConfig && serverConfig.isPublic) {
-      req.isPublic = true
-      req.serverId = serverConfig.serverId
-    }
-
     if (!req.headers.authorization) {
-      if (serverConfig.isPublic) {
-        req.userId = 0
-        return next()
-      }
-
       return res.sendStatus(401)
     }
 
     const authHeaders = req.headers.authorization.split(' ')
 
     if (authHeaders[0] !== 'Bearer') {
-      if (serverConfig.isPublic) {
-        req.userId = 0
-        return next()
-      }
-
       return res.sendStatus(401)
     }
 
@@ -44,10 +26,6 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     const userServer = await redis.getUser(token)
 
     if (!userServer) {
-      if (serverConfig.isPublic) {
-        req.userId = 0
-        return next()
-      }
       return res.sendStatus(403)
     }
 
@@ -61,10 +39,6 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
 
     // eslint-disable-next-line eqeqeq
     if (serverId1 != serverId0) {
-      if (serverConfig.isPublic) {
-        req.userId = 0
-        return next()
-      }
       return res.sendStatus(403)
     }
 
@@ -72,7 +46,7 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     req.serverId = Number(serverId0)
 
     next()
-  } catch (err) {
+  } catch (err: any) {
     logger.warn('Error verifying user', {
       error: {
         error: JSON.stringify(err),

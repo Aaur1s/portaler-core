@@ -18,7 +18,7 @@ export const getZoneMeta = async (id: number): Promise<Zone> => {
     if (zoneRedis) {
       return JSON.parse(zoneRedis)
     }
-  } catch (err) {
+  } catch (err: any) {
     // do nothing
   }
 
@@ -131,7 +131,7 @@ export const getZoneMeta = async (id: number): Promise<Zone> => {
 
     await redis.setZone(zone)
     return zone
-  } catch (err) {
+  } catch (err: any) {
     throw err
   }
 }

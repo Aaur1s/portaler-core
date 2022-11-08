@@ -1,9 +1,9 @@
 {
   "name": "@portaler/bin-etl",
-  "version": "0.0.1",
+  "version": "2.0.1",
   "description": "AO Bin Dump ETL",
   "main": "src/index.js",
-  "repository": "https://github.com/Portaler-Zone/portaler-core",
+  "repository": "https://github.com/aut1sto/portaler-core",
   "author": "",
   "license": "GNU AGPLv3",
   "private": false,
@@ -17,18 +17,18 @@
   "dependencies": {
     "@portaler/data-models": "*",
     "@portaler/logger": "*",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "luxon": "^1.25.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^16.0.3",
+    "luxon": "^3.0.4",
     "md5": "^2.3.0",
-    "node-fetch": "^2.6.7",
-    "pg": "^8.5.1",
-    "redis": "^3.0.2"
+    "node-fetch": "^3.2.10",
+    "pg": "^8.8.0",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "@portaler/types": "*",
-    "@types/luxon": "^1.25.1",
-    "@types/md5": "^2.2.1",
-    "@types/node-fetch": "^2.5.8"
+    "@types/luxon": "^3.0.2",
+    "@types/md5": "^2.3.2",
+    "@types/node-fetch": "^2.6.2"
   }
 }

@@ -16,7 +16,3 @@ CREATE TABLE IF NOT EXISTS royal_connections (
 	conn_type VARCHAR(20) NOT NULL DEFAULT 'normal',
 	PRIMARY KEY (zone_one, zone_two)
 );
-
-INSERT INTO zones (albion_id, zone_name, tier, zone_type, color) VALUES
-	('4300', 'Arthur''s Rest', 'I', 'PLAYERCITY_BLACK_NOFURNITURE', 'city'),
-	('2009', 'Astolat', 'VI', 'OPENPVP_RED', 'red');

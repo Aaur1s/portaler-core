@@ -119,7 +119,7 @@ export const updateServerPortal = async (
         conn2 = $2,
         size = $3,
         expires = $4
-      WHERE id = $5 AND server_id = $6 RETURNING `,
+      WHERE id = $5 AND server_id = $6`,
       [conns[0], conns[1], size, expires, portalId, serverId]
     )
 

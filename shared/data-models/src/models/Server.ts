@@ -9,11 +9,8 @@ interface ServerRoles {
 export interface IServerModel {
   id: number
   discordId: string
-  discordName: string
   roles: ServerRoles[]
   createdOn: Date
-  isPublic: boolean
-  discordUrl?: string | null
 }
 
 export default class ServerModel extends BaseModel {
@@ -21,13 +18,13 @@ export default class ServerModel extends BaseModel {
     super(dbQuery)
   }
 
-  create = async (discordId: string, discordName: string): Promise<number> => {
+  create = async (discordId: string): Promise<number> => {
     const dbResServer = await this.query(
       `
-      INSERT INTO servers(discord_id, discord_name)
-      VALUES ($1, $2) RETURNING id;
+      INSERT INTO servers (discord_id)
+      VALUES ($1) RETURNING id;
     `,
-      [discordId, discordName]
+      [discordId]
     )
 
     return dbResServer.rows[0].id
@@ -42,25 +39,13 @@ export default class ServerModel extends BaseModel {
     return dbResRole.rows[0].id
   }
 
-  getServerConfig = async (subdomain: string): Promise<boolean> => {
-    const dbRes = await this.query(
-      `SELECT is_public FROM servers WHERE subdomain = $1`,
-      [subdomain]
-    )
-
-    return dbRes.rowCount > 0 ? dbRes.rows[0].is_public : true
-  }
-
   getServer = async (id: number | string): Promise<IServerModel | null> => {
     try {
       const queryString = `
       SELECT
         s.id AS id,
         s.discord_id AS discord_id,
-        s.discord_name AS discord_name,
         s.created_on AS created_on,
-        s.is_public AS is_public,
-        s.discord_url AS discord_url,
         sr.id AS role_id,
         sr.discord_role_id AS discord_role_id,
         sr.last_updated AS role_last_updated
@@ -80,10 +65,7 @@ export default class ServerModel extends BaseModel {
       const server: IServerModel = {
         id: fRow.id,
         discordId: fRow.discord_id,
-        discordName: fRow.discord_name,
         createdOn: fRow.created_on,
-        isPublic: true,
-        discordUrl: fRow.discord_url,
         roles: dbResServer.rows.map((r) => ({
           id: r.role_id,
           discordRoleId: r.discord_role_id,
@@ -92,7 +74,7 @@ export default class ServerModel extends BaseModel {
       }
 
       return server
-    } catch (err) {
+    } catch (err: any) {
       return null
     }
   }

@@ -19,7 +19,7 @@ const useDeleteZone = () => {
           portals: portalIds,
         })
         checkPortals(true)
-      } catch (err) {
+      } catch (err: any) {
         dispatch({ type: ErrorActionTypes.ADD, error: 'Unable to delete Zone' })
       }
     },

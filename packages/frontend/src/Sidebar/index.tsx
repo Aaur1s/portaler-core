@@ -83,7 +83,7 @@ const SideBar = () => {
 
   const [tabValue, setTabValue] = useState<TabOpts>(tabMap(0))
 
-  const handleChange = useCallback((_, newValue: number) => {
+  const handleChange = useCallback((_: any, newValue: number) => {
     setTabValue(tabMap(newValue))
   }, [])
 

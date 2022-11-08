@@ -1,6 +1,6 @@
 .layout {
   display: grid;
-  grid-template-columns: 400px calc(100% - 400px);
+  grid-template-columns: 500px calc(100% - 400px);
   height: 100%;
   padding: 0;
   transition: 250ms;
@@ -8,9 +8,5 @@
 
   &.hideSidebar {
     display: flex;
-  }
-
-  &.mistWalker {
-    min-height: calc(100vh - 8.4rem) !important;
   }
 }

@@ -1,4 +1,4 @@
-FROM node:12-alpine as build
+FROM node:18.12-alpine as build
 
 WORKDIR /usr/build
 
@@ -15,7 +15,7 @@ RUN yarn build:shared
 RUN yarn build:api
 RUN yarn clean
 
-FROM node:12-alpine
+FROM node:18.12-alpine
 
 WORKDIR /usr/app
 

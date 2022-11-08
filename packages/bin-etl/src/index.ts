@@ -23,7 +23,6 @@ const fileGetter = async () => {
     await db.dbQuery(stmt)
   })
 
-  // TODO move this to data-model
   const zoneRes = await db.dbQuery(
     `
   SELECT *
@@ -51,8 +50,6 @@ const fileGetter = async () => {
   await fileGetter()
 
   setInterval(fileGetter, timer)
-
-  await redis.client.flushall()
 
   logger.info('ETL started')
 })()

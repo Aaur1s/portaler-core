@@ -30,7 +30,7 @@ const useGetPortals = (): ((force?: boolean) => void) => {
 
   const checkPortals = useCallback(
     async (force: boolean = false) => {
-      if ((!!config?.token || config?.isPublic) && zonesLength > 0) {
+      if (!!config?.token && zonesLength > 0) {
         const now = new Date()
 
         if (force || now.getTime() - portalState.lastUpdated > 10000) {
@@ -38,7 +38,7 @@ const useGetPortals = (): ((force?: boolean) => void) => {
             const res = await fetchPortals(config)
 
             updatePortals(res)
-          } catch (err) {
+          } catch (err: any) {
             dispatch({ type: ErrorActionTypes.ADD, error: err.message })
           }
         }

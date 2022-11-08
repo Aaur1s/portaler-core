@@ -18,6 +18,7 @@ export interface IUserModel {
   serverAccess?: ServerRoleId[]
   discordRefresh?: string | null
   createdOn: Date
+  portalsCreated?: number
 }
 
 export enum UserAction {
@@ -45,8 +46,8 @@ export default class UserModel extends BaseModel {
       if (!userId) {
         const dbResUser = await this.query(
           `
-          INSERT INTO users(discord_id, discord_name, discord_discriminator)
-          VALUES ($1, $2, $3) RETURNING id;
+          INSERT INTO users(discord_id, discord_name, discord_discriminator, portals_created)
+          VALUES ($1, $2, $3, 0) RETURNING id;
           `,
           [member.user.id, member.user.username, member.user.discriminator]
         )
@@ -77,7 +78,7 @@ export default class UserModel extends BaseModel {
       })
 
       return await Promise.all(adds)
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -103,7 +104,7 @@ export default class UserModel extends BaseModel {
       const serverModel = new ServerModel(this.query)
 
       const serverResponse: (IServerModel | null)[] = await Promise.all(
-        servers.map(async (s) => await serverModel.getServer(s.id))
+        servers.map(async (s) => await serverModel.getServer(s.id as string))
       )
 
       const existingServers: IServerModel[] = serverResponse.filter(
@@ -155,7 +156,7 @@ export default class UserModel extends BaseModel {
       )
 
       return userId
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -207,11 +208,12 @@ export default class UserModel extends BaseModel {
         discordId: fRow.discord_id,
         discordName: `${fRow.discord_name}#${fRow.discriminator}`,
         discordRefresh: fRow.refresh,
+        portalsCreated: fRow.portals_created,
         createdOn: fRow.created_on,
       }
 
       return user
-    } catch (err) {
+    } catch (err: any) {
       return null
     }
   }
@@ -228,12 +230,13 @@ export default class UserModel extends BaseModel {
         u.discord_name AS discord_name,
         u.discord_discriminator AS discriminator,
         u.discord_refresh AS refresh,
+        u.portals_created AS portals_created,
         u.created_on AS created_on,
         sr.server_id AS server_id,
         sr.discord_role_id AS role_id
       FROM users AS u
       JOIN user_servers AS us ON us.user_id = u.id
-      JOIN server_roles AS sr ON sr.id = us.server_id
+      JOIN server_roles AS sr ON us.server_id = $2
       JOIN user_roles AS ur ON ur.user_id = u.id AND ur.role_id = sr.id
       WHERE ${typeof userId === 'string' ? 'u.discord_id' : 'u.id'} = $1
         AND sr.server_id = $2
@@ -252,6 +255,7 @@ export default class UserModel extends BaseModel {
         discordId: fRow.discord_id,
         discordName: `${fRow.discord_name}#${fRow.discriminator}`,
         discordRefresh: fRow.refresh,
+        portalsCreated: fRow.portals_created,
         createdOn: fRow.created_on,
         serverAccess: dbResUser.rows.map((r) => ({
           serverId: r.server_id,
@@ -260,7 +264,7 @@ export default class UserModel extends BaseModel {
       }
 
       return user
-    } catch (err) {
+    } catch (err: any) {
       return null
     }
   }

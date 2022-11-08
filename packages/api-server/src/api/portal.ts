@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { DateTime, ISOTimeOptions } from 'luxon'
 
-import { UserAction } from '@portaler/data-models/out/models/User'
 import { Portal, PortalPayload } from '@portaler/types'
 
 import {
@@ -56,7 +55,7 @@ router.get('/', async (req, res) => {
     })
 
     res.status(200).send(portals)
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Error fetching portals', {
       user: req.userId,
       server: req.serverId,
@@ -88,40 +87,8 @@ router.post('/', async (req, res) => {
     )
 
     if (dbRes.rowCount === 0) {
-      /*await db.dbQuery(
-        `
-      INSERT INTO portals (server_id, conn1, conn2, size, expires, created_by)
-      VALUES ($1, $2, $3, $4, $5, $6);
-    `,
-        [req.serverId, conns[0], conns[1], body.size, expires, req.userId]
-      )*/
       await addServerPortal(conns, body.size, expires, req.userId, req.serverId)
-      /*await db.User.logUserAction(
-        req.userId,
-        req.serverId,
-        UserAction.add,
-        JSON.stringify({
-          conns,
-          expires,
-        })
-      )*/
     } else {
-      /*await db.dbQuery(
-        `
-        UPDATE portals
-        SET size = $1, expires = $2
-        WHERE id = $3;
-      `,
-        [body.size, expires, dbRes.rows[0].id]
-      )
-
-      const portalUpdateDb = await db.dbQuery(
-        `
-        SELECT ROW_TO_JSON(portal) as json_field
-        FROM (SELECT * FROM portals WHERE id = $1) portal
-        `,
-        [dbRes.rows[0].id]
-      )*/
       await updateServerPortal(
         dbRes.rows[0].id,
         conns,
@@ -130,19 +97,10 @@ router.post('/', async (req, res) => {
         req.userId,
         req.serverId
       )
-      /*await db.User.logUserAction(
-        req.userId,
-        req.serverId,
-        UserAction.update,
-        JSON.stringify({
-          from: dbRes.rows[0].json_field,
-          to: portalUpdateDb.rows[0].json_field,
-        })
-      )*/
     }
 
     res.sendStatus(204)
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Error setting portals', {
       user: req.userId,
       server: req.serverId,
@@ -176,7 +134,7 @@ router.delete('/', async (req, res) => {
 
     await deleteServerPortal(portalIds, req.userId, req.serverId)
     res.sendStatus(204)
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Unable to delete', {
       user: req.userId,
       server: req.serverId,

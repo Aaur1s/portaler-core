@@ -4,7 +4,7 @@ import logger from './logger'
 const populateServers = async () => {
   try {
     const dbServerRes = await db.dbQuery(
-      `SELECT id, is_public FROM servers ORDER BY id;`,
+      `SELECT id FROM servers ORDER BY id;`,
       []
     )
     const ids: Promise<any>[] = []
@@ -16,7 +16,7 @@ const populateServers = async () => {
     })
 
     await Promise.all([...ids])
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Error setting up servers in Redis', { error: err })
   }
 }

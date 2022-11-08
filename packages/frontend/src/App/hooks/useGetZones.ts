@@ -24,7 +24,7 @@ const useGetZones = () => {
         type: ZoneActionTypes.HYDRATE,
         fullState: loadedState,
       })
-    } else if (!loadedState && (config.token || config.isPublic)) {
+    } else if (!loadedState && config.token) {
       hasHydrated.current = true
 
       fetchler.get('/api/zone/list').then((json) => {

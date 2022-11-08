@@ -20,18 +20,15 @@ router.get('/login', (_, res) => {
 // should come from auth.portaler
 router.get('/callback', async (req, res) => {
   try {
-    if (!req.query.code) {
-      throw new Error('NoCodeProvided')
-    }
-
     const discordServerId = process.env.DISCORD_SERVER_ID as string
 
     const protocol = req.secure ? 'https://' : 'http://'
     const code = req.query.code as string
-
+    if (!code) {
+      throw new Error('NoCodeProvided: ' + code)
+    }
     const discordJson = await fetchToken(code)
     const token = discordJson.access_token
-
     const [me, server] = await Promise.all([
       fetchUser(token),
       fetchUserGuilds(token),
@@ -42,21 +39,19 @@ router.get('/callback', async (req, res) => {
       server,
       discordJson.refresh_token
     )
-
     const serverId = await db.Server.getServerIdByDiscordId(discordServerId)
-
+    if (!userId) {
+      throw new Error('NoServerForUserFound???: ' + userId)
+    }
     if (!serverId) {
-      throw new Error('NoServerFound' + serverId)
+      throw new Error('NoServerFound: ' + serverId)
     }
 
     const user = await db.User.getFullUser(userId, serverId)
-
     const redirectUrl = `${protocol}${config.localUrl}`
-
     if (!user) {
       return res.status(401).redirect(`${redirectUrl}/?token=invalid`)
     }
-
     const uid: string = uuid()
 
     const ourToken = btoa(uid.replace(/-/gi, '')).replace(/=/gi, '')
@@ -70,7 +65,7 @@ router.get('/callback', async (req, res) => {
     )
 
     res.redirect(`${redirectUrl}/?token=${ourToken}`)
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Error logging in User', {
       error: {
         error: JSON.stringify(err),

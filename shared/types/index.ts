@@ -1,8 +1,3 @@
-export interface ServerConfig {
-  publicRead: boolean
-  discordUrl: string | null
-}
-
 export type ZoneColor =
   | 'black'
   | 'red'
@@ -22,6 +17,12 @@ export interface Resource {
   name: string
   tier: string
   count: number
+}
+
+export interface UserInfo {
+  discord_name: string
+  discord_discriminator: string
+  portals_created: number
 }
 
 export interface Marker {

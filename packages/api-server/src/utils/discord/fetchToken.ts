@@ -1,5 +1,4 @@
 import btoa from 'btoa'
-import fetch from 'node-fetch'
 
 import config from '../config'
 
@@ -22,7 +21,6 @@ const fetchToken = async (code: string) => {
     redirect_uri: `${config.discord.redirectUri}`,
     scope: 'identify guilds',
   }
-
   const discordRes = await fetch(`${config.discord.apiUrl}/oauth2/token`, {
     method: 'POST',
     headers: {
@@ -31,7 +29,6 @@ const fetchToken = async (code: string) => {
     },
     body: new URLSearchParams(data),
   })
-
   if (!discordRes.ok) {
     throw new Error('Bad Response from Discord Auth')
   }

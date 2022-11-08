@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import React, { FC } from 'react'
+import React, { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { animated, useSpring } from 'react-spring'
 
@@ -7,7 +7,7 @@ import useGetWidth from '../../common/hooks/useGetWidth'
 import { RootState } from '../../reducers'
 import styles from './styles.module.scss'
 
-const MainLayout: FC = ({ children }) => {
+const MainLayout: FC<PropsWithChildren> = ({ children }: any) => {
   const sideBar = useSelector((state: RootState) => state.sideBar)
   const width = useGetWidth()
 

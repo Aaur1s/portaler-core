@@ -24,7 +24,7 @@ const removeUserRoles = async (
     if (token) {
       await redis.delUser(token, userId, serverId)
     }
-  } catch (err) {
+  } catch (err: any) {
     logger.error('Remove role', {
       userId,
       serverId,
@@ -52,7 +52,7 @@ export const removeUser = async (member: GuildMember | PartialGuildMember) => {
     removeUserRoles(
       user.id,
       server.id,
-      server.roles.map((r) => r.id)
+      server.roles.map((r: { id: any }) => r.id)
     )
   }
 }
@@ -71,7 +71,9 @@ const roleHandler = async (member: GuildMember) => {
 
     if (server) {
       const user = await db.User.getFullUser(member.id, server.id)
-      const roleIds = server.roles.map((r) => r.discordRoleId)
+      const roleIds = server.roles.map(
+        (r: { discordRoleId: any }) => r.discordRoleId
+      )
 
       const newRoles = member.roles.cache.map((r) => r.id)
       const hasRole = newRoles.some((r) => roleIds.includes(r))
@@ -81,11 +83,11 @@ const roleHandler = async (member: GuildMember) => {
         removeUserRoles(
           user.id,
           server.id,
-          server.roles.map((r) => r.id)
+          server.roles.map((r: { id: any }) => r.id)
         )
       } else if (!user && hasRole) {
         const dbUser = await db.User.getUserByDiscord(member.id)
-        const serverRoleIds = server.roles.map((r) => r.id)
+        const serverRoleIds = server.roles.map((r: { id: any }) => r.id)
 
         if (dbUser) {
           await db.User.addRoles(dbUser.id, serverRoleIds, server.id)
@@ -94,7 +96,7 @@ const roleHandler = async (member: GuildMember) => {
         }
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     logger.error(err)
   }
 }

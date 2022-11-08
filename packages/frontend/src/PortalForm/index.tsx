@@ -215,7 +215,7 @@ const MappingBar = () => {
         } else {
           throw new Error('you suck')
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err)
       }
     },

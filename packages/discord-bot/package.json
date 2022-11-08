@@ -1,10 +1,10 @@
 {
   "name": "@portaler/discord-bot",
-  "version": "0.0.1",
+  "version": "2.0.1",
   "description": "Portaler Discord Bot",
   "main": "out/index.js",
-  "repository": "https://github.com/Portaler-Zone/portaler-core",
-  "author": "mawburn <mawburn7@gmail.com>",
+  "repository": "https://github.com/aut1sto/portaler-core",
+  "author": "aut1sto <stepaborz@yandex.ru>",
   "license": "GNU AGPLv3",
   "private": true,
   "scripts": {
@@ -20,23 +20,23 @@
     "@portaler/logger": "*",
     "@portaler/utils": "*",
     "btoa": "^1.2.1",
-    "discord.js": "^12.4.1",
-    "dotenv": "^8.2.0",
-    "lodash": "^4.17.20",
-    "luxon": "^1.25.0",
-    "node-fetch": "^2.6.7",
-    "pg": "^8.5.1",
-    "redis": "^3.0.2"
+    "discord.js": "^12.5.3",
+    "dotenv": "^16.0.3",
+    "lodash": "^4.17.21",
+    "luxon": "^3.0.4",
+    "node-fetch": "^3.2.10",
+    "pg": "^8.8.0",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "@portaler/types": "*",
-    "@types/async-retry": "^1.4.2",
+    "@types/async-retry": "^1.4.5",
     "@types/btoa": "^1.2.3",
-    "@types/luxon": "^1.25.0",
-    "@types/node": "^14.14.7",
-    "@types/node-fetch": "^2.5.7",
-    "@types/pg": "^7.14.6",
-    "ts-node-dev": "^1.0.0",
-    "typescript": "~3.7.2"
+    "@types/luxon": "^3.0.2",
+    "@types/node": "^18.11.7",
+    "@types/node-fetch": "^2.6.2",
+    "@types/pg": "^8.6.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.4"
   }
 }

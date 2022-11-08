@@ -4,7 +4,6 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core'
 
 import SideBar from '../Sidebar'
 import Footer from './Footer'
-import useGetConfig from './hooks/useGetConfig'
 import useGetPortalTimer from './hooks/useGetPortalTimer'
 import useGetZones from './hooks/useGetZones'
 import useSetToken from './hooks/useSetToken'
@@ -15,7 +14,6 @@ import styles from './styles.module.scss'
 import theme from './theme'
 
 const App = () => {
-  useGetConfig()
   useSetToken()
   useGetZones()
   useGetPortalTimer()

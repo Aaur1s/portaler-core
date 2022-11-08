@@ -1,5 +1,3 @@
-import fetch from 'node-fetch'
-
 import { db } from './db'
 import FullZone from './FullZone'
 import logger from './logger'
@@ -69,7 +67,7 @@ const getNewFile = async (): Promise<FullZone[] | null> => {
     const fileString = JSON.stringify(fileData).replace(/@/gi, '')
 
     return JSON.parse(fileString)
-  } catch (err) {
+  } catch (err: any) {
     logger.error(err)
     return null
   }

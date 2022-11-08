@@ -34,15 +34,7 @@ const PasswordForm = () => {
   return (
     <div className={styles.btnContainer}>
       <img alt="logo" src={portalerSmall} />
-      {config.isPublic ? (
-        <>
-          <h2 className={styles.publicNote}>This server is public.</h2>
-          <h3>If you have write permissions, login with</h3>
-        </>
-      ) : (
-        <h2>Login with</h2>
-      )}
-
+      <h2>Login with</h2>
       <FormControl fullWidth>
         <DiscordButton
           variant="contained"
@@ -56,7 +48,7 @@ const PasswordForm = () => {
         We use cookies to hold a user's login information. By clicking the login
         button above you consent to cookies.
       </div>
-      {config.isPublic && config.discordUrl && (
+      {config.discordUrl && (
         <div className={styles.discordLink}>
           Please visit the discord for this server for more information.{' '}
           <div>

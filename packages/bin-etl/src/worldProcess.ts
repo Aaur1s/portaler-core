@@ -33,10 +33,10 @@ interface ZoneExits {
 const resourceMapProcess = (
   zId: string,
   isCity: boolean,
-  isCityPortal: boolean,
+  isBlackCity: boolean,
   resource?: Resource | Resource[]
 ): (string | null)[] | null => {
-  if (isCity || isCityPortal || !resource) {
+  if (isCity || isBlackCity || !resource) {
     return null
   }
 
