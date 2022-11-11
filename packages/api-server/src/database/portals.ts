@@ -35,13 +35,15 @@ export const addServerPortal = async (
   `,
       [serverId, conns[0], conns[1], size, expires, userId]
     )
-    await db.dbQuery(
-      `
-        UPDATE users
-        SET portals_created = portals_created + 1
-        WHERE id = $1`,
-      [userId]
-    )
+    if(size != 0 && size != 4200) {
+      await db.dbQuery(
+            `
+                UPDATE users
+                SET portals_created = portals_created + 1
+              WHERE id = $1`,
+            [userId]
+      )
+    }
     await db.User.logUserAction(
       userId,
       serverId,
