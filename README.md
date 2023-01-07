@@ -1,5 +1,7 @@
 
-# Portaler is alive!
+# THIS REPO IS OLD
+
+# Moved to another repo: https://github.com/aut1sto/portaler-modern
 
 <p align="center">
   <img alt="Portaler logo" width="512px" height="512px" src="https://github.com/aut1sto/portaler-core/blob/main/assets/logo/logo-512x512.png" />
